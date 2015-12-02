@@ -1,0 +1,71 @@
+boolean gameStart = false;
+
+float x = 150;
+float y = 150;
+float speedX = random(3, 5);
+float speedY = random(3, 5);
+int leftColor = 128;
+int rightColor = #28009B;
+int diam;
+int rectSize = 150;
+float diamHit;
+Table timeTable;
+Table dataTable;
+int rowCount;
+
+Ball[] ball; 
+//int objectnumber = 20; 
+
+void setup () { 
+  size (500, 500);  
+    timeTable = new Table("time.tsv");
+  rowCount = timeTable.getRowCount();
+  
+  
+  ball = new Ball[rowCount]; 
+
+  for (int i= 0; i < rowCount; i++) { 
+    //int xspeed = dataTable.getInt(i,1);
+    //int yspeed = dataTable.getInt(i,1);
+    //ball[i] = new Ball(0, random(50, 500), random(10, 400), xspeed, yspeed, 10, 20, rectSize);
+    ball[i] = new Ball (0, random(50, 500), random(10, 400), 10, 20, rectSize);
+  }  
+
+  //void Setup Pong
+
+  size(500, 500);
+  noStroke();
+  smooth();
+  ellipseMode(CENTER);
+} 
+
+//
+
+void draw () { 
+  background(#FFC6EA); 
+  
+  if (gameStart) {
+   for (int row = 0; row<rowCount; row++) {
+    String id = timeTable.getRowName(row);
+    float time = timeTable.getFloat(id, 1);
+    float involvement = timeTable.getFloat(id, 2);
+    
+    float limit = map(time, 1,5, 350,0);
+    
+    ball[row].display (); 
+    ball[row].move (involvement, involvement, limit);
+    
+   }
+    
+    //paddle
+    rect(width-30, mouseY-rectSize/2, 10, rectSize);
+   
+  }
+} 
+
+void mousePressed() { 
+  gameStart = !gameStart;
+  for (int i=0; i<rowCount; i++) {
+    ball[i].turnOnOff();
+  }
+}
